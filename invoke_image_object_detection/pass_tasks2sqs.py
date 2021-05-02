@@ -15,7 +15,8 @@ def send2sqs(a2i_id, queue_url):
             }
         },
         MessageBody=(
-            'send to sqs'
+            'Information about current NY Times fiction bestseller for '
+            'week of 12/11/2016.'
         )
     )
     

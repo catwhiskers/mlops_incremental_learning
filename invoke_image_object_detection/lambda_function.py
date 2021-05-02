@@ -40,7 +40,7 @@ def lambda_handler(event, context):
         task = str(uuid.uuid4())
         file_name = "{}.jpg".format(task) 
                     
-        s3_client.put_object(Body=payload, Bucket=BUCKET, Key=KEY+file_name)
+        s3_client.put_object(Body=payload, Bucket=BUCKET, Key="{}/{}".format(KEY,file_name))
         s3_filename = "s3://{}/{}/{}".format(BUCKET, KEY, file_name)                    
         inputContent = {
             "initialValue": obj[0],

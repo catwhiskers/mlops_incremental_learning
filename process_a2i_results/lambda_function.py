@@ -3,12 +3,21 @@ import boto3
 from model import get_latest_model_path
 from datetime import datetime
 import re
+import os
 from prepare_data import convert_a2i_to_augmented_manifest
+
+BUCKET = os.environ['BUCKET']
+PIPELINE = os.environ['PIPELINE']
+MODEL_GROUP = os.environ['MODEL_GROUP']
+
+
 msg_attr = "messageAttributes"
 a2i_id = "a2i-task-id"
 s3_path = "s3-image-path"
 loop_status = "HumanLoopStatus"
 string_value = "stringValue"
+
+
 a2i = boto3.client('sagemaker-a2i-runtime')
 sm_client = boto3.client('sagemaker')
 s3_client = boto3.client('s3')
@@ -28,7 +37,7 @@ def lambda_handler(event, context):
     output=[]
     training_file = 'augmented.manifest'
     path = "/tmp/{}".format(training_file)
-    BUCKET = "sagemaker-us-west-2-230755935769"
+    
     with open(path, 'w') as outfile:
         # convert the a2i json to augmented manifest for each human loop output
         for resp in completed_human_loops:
@@ -50,10 +59,10 @@ def lambda_handler(event, context):
     now = datetime.now()
     timestamp = datetime.timestamp(now)
     key = "a2i-result/{}/{}".format(str(timestamp), training_file)
-    bucket = 'alphapose-yianc'
-    s3_client.upload_file(path, Bucket=bucket, Key=key)                
-    s3_path = "s3://{}/{}".format(bucket, key)
-    last_model_path = get_latest_model_path() 
+    
+    s3_client.upload_file(path, Bucket=BUCKET, Key=key)                
+    s3_path = "s3://{}/{}".format(BUCKET, key)
+    last_model_path = get_latest_model_path(MODEL_GROUP) 
     parameters = [
         {
             'Name':'TrainData',
@@ -72,9 +81,10 @@ def lambda_handler(event, context):
 
     ]
 
-    response = sm_client.start_pipeline_execution( PipelineName = "ObjectDetectionPipeline-new", PipelineParameters=parameters)
+    response = sm_client.start_pipeline_execution( PipelineName = PIPELINE, PipelineParameters=parameters)
     
     return {
         'statusCode': 200,
-        'body': json.dumps(completed_human_loops)
+        # 'body': json.dumps(completed_human_loops)
+        'body': 'finished'
     }
