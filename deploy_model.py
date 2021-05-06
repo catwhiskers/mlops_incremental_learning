@@ -8,18 +8,20 @@ import time
 parser = argparse.ArgumentParser()
 parser.add_argument('--model-name', type=str)
 parser.add_argument('--endpoint-name', type=str)
+parser.add_argument('--region', type=str)
 args = parser.parse_args()
 
 timestamp = str(int(time.time())) 
 model_name = args.model_name
 endpoint_name = args.endpoint_name 
+region = args.region 
 
 endpoint_config_name = "objectdetection-modelconfig-"+ timestamp
 
 
 
 
-sm_client = boto3.client('sagemaker')
+sm_client = boto3.client('sagemaker', region_name=region)
 
 
 
