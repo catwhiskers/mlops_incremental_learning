@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #OD_API='https://2lvd1jdy8l.execute-api.us-west-2.amazonaws.com/test/classify'
-OD_API='https://qwulxwxs4e.execute-api.us-west-2.amazonaws.com/dev/detect'
+OD_API=$1
+echo $OD_API
 
 for f in $(ls images/*.jpg)
 do
