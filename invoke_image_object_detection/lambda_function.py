@@ -59,12 +59,9 @@ def lambda_handler(event, context):
         
         # https://forums.aws.amazon.com/thread.jspa?messageID=961211&tstart=0
         
-        a2i_arn = start_loop_response['HumanLoopArn'].split('/')[-1]
+        # a2i_arn = start_loop_response['HumanLoopArn'].split('/')[-1]
         
-        import pass_tasks2sqs
-        pass_tasks2sqs.send2sqs(a2i_arn,SQS_URL)
-
-    
-    
+        # import pass_tasks2sqs
+        # pass_tasks2sqs.send2sqs(a2i_arn,SQS_URL)
     
     return result 
